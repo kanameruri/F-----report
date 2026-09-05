@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>F-188███-32 報告書 #01</title>
+
+<style>
+  :root{
+    --ink:#242424;
+    --muted:#6b6b6b;
+    --paper:#ffffff;
+    --line:#d9d9d9;
+    --panel:#f6f6f4;
+    --danger:#8f1d1d;
+    --ok:#1f5f3d;
+  }
+
+  *{box-sizing:border-box;}
+
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:
+      "Noto Sans TC","PingFang TC","Microsoft JhengHei",
+      system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    line-height:1.8;
+  }
+
+  .page{
+    width:min(900px, calc(100% - 40px));
+    margin:70px auto 100px;
+  }
+
+  .eyebrow{
+    font-size:12px;
+    letter-spacing:.16em;
+    color:var(--muted);
+    margin-bottom:8px;
+  }
+
+  h1{
+    font-size:clamp(32px,5vw,48px);
+    line-height:1.15;
+    margin:0 0 24px;
+    font-weight:800;
+    letter-spacing:.01em;
+  }
+
+  .meta{
+    font-size:16px;
+    margin-bottom:54px;
+  }
+
+  .meta p{
+    margin:.45em 0;
+  }
+
+  .rule{
+    border:0;
+    border-top:1px solid var(--line);
+    margin:34px 0;
+  }
+
+  .bodycopy{
+    font-size:18px;
+  }
+
+  .bodycopy p{
+    margin:0 0 1.4em;
+  }
+
+  .section-title{
+    font-size:14px;
+    letter-spacing:.12em;
+    font-weight:700;
+    color:var(--muted);
+    margin:42px 0 10px;
+  }
+
+  /* 黑色遮蔽條：解鎖前完全遮住，解鎖後逐段淡出 */
+  .redacted{
+    position:relative;
+    display:inline-block;
+    color:transparent;
+    user-select:none;
+    white-space:nowrap;
+  }
+
+  .redacted::after{
+    content:"";
+    position:absolute;
+    inset:.15em -.06em .1em -.06em;
+    background:#242424;
+    border-radius:1px;
+    transform-origin:left center;
+    transform:scaleX(1);
+    opacity:1;
+  }
+
+  body.unlocked .redacted{
+    color:inherit;
+    user-select:text;
+    transition:color .15s linear .2s;
+  }
+
+  body.unlocked .redacted::after{
+    animation:unredact .75s cubic-bezier(.65,0,.35,1) forwards;
+  }
+
+  .redacted[data-delay="1"]::after{ animation-delay:.10s; }
+  .redacted[data-delay="2"]::after{ animation-delay:.22s; }
+  .redacted[data-delay="3"]::after{ animation-delay:.34s; }
+  .redacted[data-delay="4"]::after{ animation-delay:.46s; }
+
+  @keyframes unredact{
+    0%   { transform:scaleX(1); opacity:1; }
+    72%  { transform:scaleX(.04); opacity:1; }
+    100% { transform:scaleX(0); opacity:0; }
+  }
+
+  /* 白字隱藏：解鎖後轉為黑字 */
+  .ghost{
+    color:#fff;
+    transition:color 1s ease;
+    text-shadow:none;
+  }
+
+  body.unlocked .ghost{
+    color:var(--ink);
+  }
+
+  /* 整段內容：解鎖前不顯示 */
+  .sealed{
+    display:none;
+    margin-top:26px;
+    padding:18px 20px;
+    border-left:3px solid #242424;
+    background:var(--panel);
+  }
+
+  body.unlocked .sealed{
+    display:block;
+    animation:fadeIn .7s ease both .25s;
+  }
+
+  @keyframes fadeIn{
+    from{opacity:0; transform:translateY(6px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+
+  /* 解鎖面板 */
+  .lockbox{
+    margin:38px 0 48px;
+    border:1px solid var(--line);
+    background:var(--panel);
+    padding:26px;
+  }
+
+  .lockbox-title{
+    font-size:13px;
+    font-weight:800;
+    letter-spacing:.15em;
+    margin-bottom:8px;
+  }
+
+  .lockbox-sub{
+    color:var(--muted);
+    font-size:14px;
+    margin-bottom:18px;
+  }
+
+  .controls{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+
+  input[type="password"]{
+    flex:1 1 220px;
+    min-width:0;
+    height:42px;
+    border:1px solid #bdbdbd;
+    background:#fff;
+    color:var(--ink);
+    padding:0 12px;
+    font-size:17px;
+    letter-spacing:.25em;
+    outline:none;
+  }
+
+  input[type="password"]:focus{
+    border-color:#555;
+  }
+
+  button{
+    height:42px;
+    border:0;
+    background:#242424;
+    color:#fff;
+    padding:0 18px;
+    font-weight:700;
+    cursor:pointer;
+  }
+
+  button:hover{ opacity:.9; }
+
+  .status{
+    min-height:1.5em;
+    margin-top:12px;
+    font-size:13px;
+    letter-spacing:.08em;
+  }
+
+  .status.ok{ color:var(--ok); }
+  .status.bad{ color:var(--danger); }
+
+  .stamp{
+    display:none;
+    margin-top:16px;
+    font-weight:800;
+    letter-spacing:.14em;
+    font-size:13px;
+  }
+
+  body.unlocked .stamp{
+    display:block;
+    animation:fadeIn .5s ease both;
+  }
+
+  .footer{
+    margin-top:70px;
+    padding-top:18px;
+    border-top:1px solid var(--line);
+    color:var(--muted);
+    font-size:12px;
+    letter-spacing:.08em;
+  }
+
+  @media (max-width:600px){
+    .page{
+      width:min(100% - 28px, 900px);
+      margin-top:34px;
+    }
+
+    .bodycopy{font-size:16px;}
+    .lockbox{padding:20px;}
+  }
+</style>
+</head>
+
+<body>
+<main class="page">
+  <div class="eyebrow">INTERNAL RECORD / RESTRICTED</div>
+  <h1>F-188<span class="redacted" data-delay="1">███</span>-32 報告書 #01</h1>
+
+  <div class="meta">
+    <p>紀錄時間：188 年 <span class="redacted" data-delay="2">██</span> 月 <span class="redacted" data-delay="3">██</span> 日 22 時 31 分</p>
+    <p>紀錄人員：<span class="redacted" data-delay="4">██████</span></p>
+  </div>
+
+  <div class="lockbox" id="lockbox">
+    <div class="lockbox-title">LEVEL-3 RESTRICTED ACCESS</div>
+    <div class="lockbox-sub">輸入 6 位數授權碼以解除遮蔽內容。</div>
+
+    <div class="controls">
+      <input
+        id="code"
+        type="password"
+        inputmode="numeric"
+        pattern="[0-9]*"
+        maxlength="6"
+        autocomplete="off"
+        placeholder="••••••"
+        aria-label="授權碼"
+      />
+      <button id="unlockButton" type="button">VERIFY</button>
+    </div>
+
+    <div class="status" id="status"></div>
+    <div class="stamp">AUTHORIZATION ACCEPTED / CLEARANCE CONFIRMED</div>
+  </div>
+
+  <section class="bodycopy">
+    <p>本報告為案件 F-188<span class="redacted" data-delay="1">███</span>-32 之概況及案件交接情形。</p>
+
+    <p>
+      本分隊隊員 <span class="redacted" data-delay="2">██████</span>
+      於 188 年 <span class="redacted" data-delay="3">██</span> 月
+      <span class="redacted" data-delay="4">██</span> 日 21 時 42 分，
+      於 <span class="redacted" data-delay="1">████████</span> 發現當事人。
+      當事人為垂耳兔族女性，其衣袖、衣襟及雙手均有明顯血跡。
+      當事人呼吸急促，語無倫次，未能正常回答隊員詢問之問題，
+      僅反覆陳述「我殺了人」。
+    </p>
+
+    <p>
+      同日 22 時 03 分，本隊隊員於
+      <span class="redacted" data-delay="2">████████</span>
+      發現一名人類男性，該男性
+      <span class="ghost">左側頸部及胸腹部存在多處嚴重外傷</span>，
+      已即時通報醫療單位，並將現場封鎖。
+    </p>
+
+    <p>
+      經確認後，鑑於當事人身上檢出之血跡樣本與該名男性之血液樣本相符，
+      本署初步將當事人列為嫌疑人。
+    </p>
+
+    <div class="sealed">
+      <div class="section-title">SEALED SUPPLEMENT / 解鎖後顯示</div>
+      <p>
+        補充紀錄：現場第二次搜索期間，於
+        <span class="redacted" data-delay="3">██████████</span>
+        發現未登錄物件一件。該物件外觀與本案既有證物紀錄不符，
+        已轉交特殊案件應對小組保管。
+      </p>
+      <p>
+        另據初步鑑識結果，部分痕跡無法以當事人或受害者現有樣本解釋。
+        本段資訊於案件解除限制前不得對外引用。
+      </p>
+    </div>
+
+    <p>
+      因本案件疑涉及 Fork 類別針對第三方之攻擊行為，
+      本隊依規定先行控制當事人行動，即時通報醫療單位，
+      並將本案交由特殊案件應對小組處理。
+    </p>
+  </section>
+
+  <div class="footer">
+    F-188███-32 / INTERNAL USE ONLY
+  </div>
+</main>
+
+<script>
+  /*
+    ====== 修改區 ======
+    1. 把下面的 188732 改成你要的 6 位數密碼。
+    2. 內文可直接修改 HTML 裡的文字。
+    3. 要做黑條遮蔽：<span class="redacted">秘密文字</span>
+    4. 要做白字變黑：<span class="ghost">秘密文字</span>
+    5. 要整段解鎖後才出現：放進 <div class="sealed"> ... </div>
+
+    注意：這是視覺解謎效果，不是真正安全的密碼保護。
+    密碼與隱藏內容仍存在於網頁原始碼中。
+  */
+  const CORRECT_CODE = "188732";
+
+  const input = document.getElementById("code");
+  const button = document.getElementById("unlockButton");
+  const status = document.getElementById("status");
+
+  function unlock(){
+    const value = input.value.trim();
+
+    if(value === CORRECT_CODE){
+      document.body.classList.add("unlocked");
+      status.textContent = "ACCESS GRANTED";
+      status.className = "status ok";
+      input.disabled = true;
+      button.disabled = true;
+      button.textContent = "UNLOCKED";
+    } else {
+      document.body.classList.remove("unlocked");
+      status.textContent = "ACCESS DENIED";
+      status.className = "status bad";
+      input.value = "";
+      input.focus();
+    }
+  }
+
+  button.addEventListener("click", unlock);
+
+  input.addEventListener("keydown", (event) => {
+    if(event.key === "Enter") unlock();
+  });
+
+  input.addEventListener("input", () => {
+    input.value = input.value.replace(/\D/g, "");
+  });
+</script>
+</body>
+</html>
