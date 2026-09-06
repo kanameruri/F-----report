@@ -928,6 +928,76 @@ p {
 </style>
 
 </style>
+<style>
+/* ===== Notion Embed 專用 ===== */
+
+html,
+body {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+
+    background: transparent !important;
+
+    overflow-x: hidden !important;
+}
+
+/* 不要再做第二層 900px 網頁 */
+body {
+    color: rgb(55, 53, 47);
+
+    /* 隱藏 iframe 自己的直向捲軸，但仍可滾動 */
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+body::-webkit-scrollbar,
+html::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+}
+
+/* Notion 匯出的主頁容器 */
+article.page,
+.page {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+
+    /* 左右留一點點，避免文字貼邊 */
+    padding: 4px 8px !important;
+}
+
+/* 你的頁面沒有標題，所以不要讓空 header 佔空間 */
+header {
+    display: none !important;
+}
+
+.page-body {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    overflow: visible;
+}
+
+/* 防止很長的 ████████ 撐出橫向捲軸 */
+.page-body p {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+/* 避免 Notion 匯出的集合區塊自己產生橫向 scrollbar */
+.collection-content-wrapper {
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+}
+</style>	
 </head><body><article id="3d3594ac-f0b8-80e8-a31b-d067d4134a22" class="page sans"><header><h1 class="page-title" dir="auto"></h1><p class="page-description" dir="auto"></p></header><div class="page-body"><p id="3d3594ac-f0b8-8037-a202-ce82fba3d609" class="" dir="auto"><strong>一、調查對象基本資料</strong></p><p id="3d3594ac-f0b8-804e-add5-fad999a8721b" class="" dir="auto">姓名：████</p><p id="3d3594ac-f0b8-8051-8e2b-c78c3449a607" class="" dir="auto">性別：女</p><p id="3d3594ac-f0b8-801f-8e1d-eedf03d32d78" class="" dir="auto">出生年月日：███ 年 █ 月 ██ 日</p><p id="3d3594ac-f0b8-808d-ae49-cdd2754ea9c0" class="" dir="auto">種族：垂耳兔族</p><p id="3d3594ac-f0b8-8040-bc67-e652b2608c25" class="" dir="auto">██████████████████</p><p id="3d3594ac-f0b8-8055-b552-fd5d93f21acf" class="" dir="auto">████████████████████████</p><p id="3d3594ac-f0b8-800f-9d41-cf8526cb0e71" class="" dir="auto">
 </p><p id="3d3594ac-f0b8-8005-8058-d78cf48b3f2f" class="" dir="auto">
 </p><p id="3d3594ac-f0b8-808a-9876-e646f3530cc5" class="" dir="auto"><strong>二、調查目的</strong></p><p id="3d3594ac-f0b8-8034-aa48-cbf14a109c8e" class="" dir="auto">本報告依███████████████第二條所列，旨在釐清調查對象於███年██月███日至██月███日期間之異常行為，以判斷其是否涉及██████████████████傷害事件。</p><p id="3d3594ac-f0b8-8076-b709-f5e193aaa7c8" class="" dir="auto">
